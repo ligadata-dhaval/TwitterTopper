@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="Gradle: org.scala-tools.testing:specs_2.9.1:1.6.9">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.scala-tools.testing/specs_2.9.1/1.6.9/397283ed95aa690a3101e47f1d8c5825d2fcd8a0/specs_2.9.1-1.6.9.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.scala-tools.testing/specs_2.9.1/1.6.9/5d679c69a7280d96141c81b427549fb90ef27b0e/specs_2.9.1-1.6.9-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

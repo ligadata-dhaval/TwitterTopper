@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="Gradle: org.scala-lang:scala-compiler:2.9.1">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.scala-lang/scala-compiler/2.9.1/bf5e88c6b69d3f922ce71cb973c45cb5ac6c2805/scala-compiler-2.9.1.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.scala-lang/scala-compiler/2.9.1/d65d7ae802a230029112c32050946488714869a0/scala-compiler-2.9.1-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
