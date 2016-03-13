@@ -15,6 +15,7 @@ class Controller {
     println("Screen names are: "+screenNames+" and count is: "+count)
    var service= new Service
 //    service.viewTweets(screenNames.split(","),count)
-    service.viewStatuses(screenNames,3)
+    //service.viewStatuses(screenNames,3)
+    service.oauthTwitter(screenNames,count)
   }
 }

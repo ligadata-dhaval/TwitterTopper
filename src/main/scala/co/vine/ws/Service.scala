@@ -1,18 +1,14 @@
 package co.vine.ws
 
-import java.net.URLEncoder
-
-import twitter4j._
-import twitter4j.auth.{AccessToken, OAuth2Token}
-import twitter4j.conf.ConfigurationBuilder
-
-import scalaj.http._
+import com.github.scribejava.apis.TwitterApi
+import com.github.scribejava.core.builder.ServiceBuilder
+import com.github.scribejava.core.model._
 
 /**
  * Created by dhavalkolapkar on 3/9/16.
  */
 class Service {
-
+/*
 
   /* def encodeKeys(consumerKey: String, consumerSecret: String): String ={
     val encodedConsumerKey=URLEncoder.encode(consumerKey,"UTF-8")
@@ -85,14 +81,38 @@ class Service {
     var twitter = tf.getInstance()
 
     var paging = new Paging(1, count)
-    var myList = twitter.list().createUserList(System.currentTimeMillis().toString, false, "tst")
+   var myList = twitter.list().createUserList(System.currentTimeMillis().toString, false, "tst")
     twitter.createUserListMember(myList.getId,twitter.users.showUser("mrsfunnybones").getId)
     twitter.createUserListMember(myList.getId,twitter.users.showUser("Psilosophy").getId)
-    println(myList.getId)
-//    var response = twitter.list().getUserListStatuses(myList.getId, paging)
-//    response.toArray().foreach(println)
-  /*var query=new Query("from%3A[Psilosophy]+OR+from%3A[mrsfunnybones]")
-    var queryResult=twitter.search().search(query)
-    queryResult.getTweets.toArray.foreach(println)*/
+
+    //twitter.list().destroyUserList("PunyacheRau","test")
+   var response = twitter.list().getUserListStatuses(myList.getId, paging)
+    response.toArray().foreach(println)
+  }*/
+
+  def oauthTwitter(screenNames: String,count: Int): Unit ={
+    val service = new ServiceBuilder()
+      .apiKey("jK6k4cbCfO191K2tezqm1eZqQ")
+      .apiSecret("YkqNYCjkFUHqQLn7Kh5IxpgFJ8hqIrQcZsWPil4PWh6moYbQhg")
+      .build(TwitterApi.Authenticate.instance())
+
+    val accessToken = new OAuth1AccessToken("220347935-yNr3XU7UV5JcRWxKRZVJLgHWesjVIJdtYap5n7KL","11JtXVWzJd4GnCk84dtxEA06x4QkTInNy6W25OWSNhRTZ")
+ /*   val request = new OAuthRequest(Verb.POST, "https://api.twitter.com/1.1/lists/create.json?name=VineAWS1&mode=public&description=For%20life", service)
+    service.signRequest(accessToken, request) // the access token from step 4
+    val response = request.send()
+    println(response.getBody())
+ */
+    /*val createMembersQuery="https://api.twitter.com/1.1/lists/members/create_all.json?screen_name="+screenNames+"&list_id=708937172829626369"
+    val request = new OAuthRequest(Verb.POST,createMembersQuery, service)
+    service.signRequest(accessToken, request) // the access token from step 4
+    val response = request.send()
+    println(response.getBody())*/
+
+    val createMembersQuery="https://api.twitter.com/1.1/lists/statuses.json?slug=VineAWS1&owner_screen_name=PunyacheRau&count=5"
+    val request = new OAuthRequest(Verb.GET,createMembersQuery, service)
+    service.signRequest(accessToken, request) // the access token from step 4
+    val response = request.send()
+    println(response.getBody())
   }
+
 }
