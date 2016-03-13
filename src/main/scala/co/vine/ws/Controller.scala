@@ -14,6 +14,7 @@ class Controller {
   def viewStatus(@RequestParam("screen_names") screenNames: String, @RequestParam("count") count: Int): Unit ={
     println("Screen names are: "+screenNames+" and count is: "+count)
    var service= new Service
-    service.viewTweets(screenNames)
+//    service.viewTweets(screenNames.split(","),count)
+    service.viewStatuses(screenNames,3)
   }
 }

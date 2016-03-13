@@ -33,7 +33,7 @@ dependencies {
 	testCompile('org.springframework.boot:spring-boot-starter-test')
 	compile 'org.scala-lang:scala-library:2.11.7'
     compile 'org.scalaj:scalaj-http_2.11:2.2.1'
-    compile 'org.twitter4j:twitter4j-core:4.0.1'
+    compile 'org.twitter4j:twitter4j-core:4.0.4'
 }
 
 
