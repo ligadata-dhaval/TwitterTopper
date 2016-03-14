@@ -12,7 +12,7 @@ class Controller {
   @RequestMapping(value = Array("/statuses"))
   @ResponseBody
   def viewStatus(@RequestParam("screen_names") screenNames: String, @RequestParam("count") count: Int): Unit ={
-    println("Screen names are: "+screenNames+" and count is: "+count)
+
      new Service().getStatuses(screenNames,count)
      // new Twitter4JService().getStatuses
   }
