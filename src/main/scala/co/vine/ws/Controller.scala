@@ -13,9 +13,7 @@ class Controller {
   @ResponseBody
   def viewStatus(@RequestParam("screen_names") screenNames: String, @RequestParam("count") count: Int): Unit ={
     println("Screen names are: "+screenNames+" and count is: "+count)
-   var service= new Service
-//    service.viewTweets(screenNames.split(","),count)
-    //service.viewStatuses(screenNames,3)
-    service.oauthTwitter(screenNames,count)
+     new Service().getStatuses(screenNames,count)
+     // new Twitter4JService().getStatuses
   }
 }

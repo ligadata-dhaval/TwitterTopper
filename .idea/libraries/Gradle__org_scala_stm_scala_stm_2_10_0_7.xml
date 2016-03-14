@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="Gradle: org.scala-stm:scala-stm_2.10:0.7">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.scala-stm/scala-stm_2.10/0.7/51dbcb4e33aa021ee6694674333e66dec161648d/scala-stm_2.10-0.7.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.scala-stm/scala-stm_2.10/0.7/343a72139c944cf3d69985270da334cbc35883ac/scala-stm_2.10-0.7-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

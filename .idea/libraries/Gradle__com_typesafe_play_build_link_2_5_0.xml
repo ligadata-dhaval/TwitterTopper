@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="Gradle: com.typesafe.play:build-link:2.5.0">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.typesafe.play/build-link/2.5.0/5159ca646c5086e4ce84788cc1ed55cd979a6d/build-link-2.5.0.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.typesafe.play/build-link/2.5.0/e709473cb8d65d99946c995723b5e574fb2e522f/build-link-2.5.0-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
