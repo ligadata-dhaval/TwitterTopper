@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation._
 class Controller {
 
   @RequestMapping(value = Array("/statuses"))
-  @ResponseBody
   def viewStatus(@RequestParam("screen_names") screenNames: String, @RequestParam("count") count: Int): Unit ={
 
      new Service().getStatuses(screenNames,count)

@@ -36,6 +36,8 @@ dependencies {
     compile 'com.github.scribejava:scribejava-apis:2.3.0'
     compile 'com.typesafe.play:play_2.11:2.5.0'
 	compile 'org.twitter4j:twitter4j-core:4.0.4'
+    compile 'com.google.code.gson:gson:2.6.2'
+
 }
 
 

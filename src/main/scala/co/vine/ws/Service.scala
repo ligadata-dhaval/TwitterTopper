@@ -2,29 +2,29 @@ package co.vine.ws
 
 import java.util
 
-import com.fasterxml.jackson.annotation.JsonProperty
 import com.github.scribejava.apis.TwitterApi
 import com.github.scribejava.core.builder.ServiceBuilder
 import com.github.scribejava.core.model._
+import com.google.gson.Gson
 import play.api.libs.json._
+
+import scala.collection.mutable.ListBuffer
 
 /**
  * Created by dhavalkolapkar on 3/9/16.
  */
+case class ResponseBody(nextCursor: String, statuses: Array[String]){}
 
-case class StatusResponse(@JsonProperty("text") status: String, @JsonProperty("id") user: String){
-
+case class TweetStatus(user: String,status: String){}
+object MyWriter {
+  implicit val anyValWriter = Writes[Any] (a => a match {
+    case v:String => Json.toJson(v)
+    case v:Int => Json.toJson(v)
+    case v:Any => Json.toJson(v.toString)
+    // or, if you don't care about the value
+    case _ => throw new RuntimeException("unserializeable type")
+  })
 }
-/*
-
-
-case class HashTags(@JsonProperty("text") hashtag: JsString, @JsonProperty("indices") indices: Seq[JsString]){}
-object HashTags{
-  implicit val jsonFormat: Format[HashTags] = Json.format[HashTags]
-}
-*/
-
-
 
 object Service {
 
@@ -35,6 +35,7 @@ object Service {
    val accessToken = new OAuth1AccessToken("220347935-yNr3XU7UV5JcRWxKRZVJLgHWesjVIJdtYap5n7KL", "11JtXVWzJd4GnCk84dtxEA06x4QkTInNy6W25OWSNhRTZ")
 
   def getAuthenticationDetails = (service, accessToken)
+
 }
 
 class Service {
@@ -60,15 +61,6 @@ class Service {
     service.signRequest(accessToken, request) // the access token from step 4
     response = request.send().getBody
     json=  Json.parse(response.toString)
-    /*
-    var gson = new Gson()
-
-    var navigationArray = gson.fromJson(response,classOf[TweetResponse])
-
-    var collectionType = new TypeToken[List[TweetResponse]](){}.getType
-    var navigation: List[TweetResponse] = gson.fromJson(response, collectionType)
-    navigation.foreach(f=> println(f))
-    //println(response.getBody())*/
 
     //get statuses of the query
     var getStatusesQuery = "https://api.twitter.com/1.1/lists/statuses.json?slug="+slug.toString+"&owner_screen_name=PunyacheRau&count="+count+"&include_entities=true"
@@ -76,8 +68,12 @@ class Service {
     service.signRequest(accessToken, request) // the access token from step 4
 
     response = request.send().getBody
-     json=Json.parse(response)
+    json=Json.parse(response)
+    //println()
+
     var userInfos=(json).as[List[JsObject]]
+    var statuses = new Array[String](userInfos.size)
+    var i=0
     for(userInfo<-userInfos){
       var json=Json.parse(userInfo.toString())
       var text=(json \ "text").result.as[String]
@@ -87,71 +83,89 @@ class Service {
       var temp=addHashTagURL(hashtags,text)
       //mentions
       var mentions=(json \ "entities" \ "user_mentions").as[List[JsObject]]
-         var temp2=addMentionsURL(mentions,temp)
+      var temp2=addMentionsURL(mentions,temp)
+      //urls
+      var urls=(json \ "entities" \ "urls").as[List[JsObject]]
+      var temp3: String=addExpandedURLs(urls,temp2)
 
-      println("URL: "+temp2)
-      //println("user: "+username.toString +" status: "+text.toString+ " hastags: "+hashtags.toString())
-
+      //println("URL: "+temp3)
+      /*val gson = new Gson
+      val jsonString = gson.toJson(new TweetStatus(username,temp3))
+      statuses.add(jsonString)*/
+     implicit val userImplicitWrites = Json.writes[TweetStatus]
+      val jsUserValue = Json.toJson(new TweetStatus(username,temp3))
+      //println(jsUserValue)
+     var status= (jsUserValue).toString()
+     //statuses.add(status)
+      statuses(i)=status
+      i=i+1
+      //println(status)
     }
-  /*val userInfo=  Json.parse(response).map(_.as[String]).toList
-  userInfo.foreach(println)
+
+  implicit val userImplicitWrites = Json.writes[ResponseBody]
+    val jsUserValue = Json.toJson(new ResponseBody("1",statuses))
+    println(jsUserValue)
+
+    /*var responseBody=new ResponseBody("1",statuses)
+    val gson = new Gson
+    val jsonString1 = gson.toJson(responseBody)
+    println(jsonString1)
 */
 
-    //delete the user list
-    var deleteListQuery="https://api.twitter.com/1.1/lists/destroy.json?owner_screen_name=PunyacheRau&slug="+slug
-    request = new OAuthRequest(Verb.POST, deleteListQuery, service)
-    service.signRequest(accessToken, request) // the access token from step 4
-    response = request.send().getBody
-   // println(response.getBody())
-    //println("Process ends!")
-  }
 
-  def addHashTagURL(hashtags: List[JsObject],text: String): String ={
-   //println("Adding hashtag url")
-    var temp : String=text
-    var temp1 : String=""
-      for(hashtag<-hashtags){
-        val json=Json.parse(hashtag.toString())
-      //x println(json)
-        val hashtagdata=(json \ "text").result.as[String]
-       /*// println("bawa: " + hashtagdata)
-        val index1=(json \ "indices").result.get(0).as[Int]
-        val index2=(json \ "indices").result.get(1).as[Int]
+ //delete the user list
+ var deleteListQuery="https://api.twitter.com/1.1/lists/destroy.json?owner_screen_name=PunyacheRau&slug="+slug
+ request = new OAuthRequest(Verb.POST, deleteListQuery, service)
+ service.signRequest(accessToken, request) // the access token from step 4
+ response = request.send().getBody
+// println(response.getBody())
+ //println("Process ends!")
+}
 
-        val url="https://twitter.com/hashtag/"+hashtagdata
-        val anchorStart="<a href="+url+">"
-       /* var startLoc=hashtag.indices(0).result.as[String]
-        var endLoc=hashtag.indices(1).result.as[String]*/
+def addHashTagURL(hashtags: List[JsObject],text: String): String ={
+//println("Adding hashtag url")
+ var temp : String=text
+ var temp1 : String=""
+   for(hashtag<-hashtags){
+     val json=Json.parse(hashtag.toString())
+   //x println(json)
+     val hashtagdata=(json \ "text").result.as[String]
+     val url="https://twitter.com/hashtag/"+hashtagdata
+     val replace="<a href= "+url+">#"+hashtagdata+"</a>"
+     val regex = ("#"+hashtagdata).r
+     val newText = regex.replaceAllIn(temp, replace)
+     temp=newText
+   }
+ temp
+}
 
-        var (fst, snd) = temp.splitAt(index1)
-        temp=""
-        temp=fst +anchorStart+ snd
-        val (first, second) = temp.splitAt(index2)
-        temp=""
-        temp=first +"</a>"+ second*/
-        val url="https://twitter.com/hashtag/"+hashtagdata
-        val replace="<a href= "+url+">#"+hashtagdata+"</a>"
-        val regex = ("#"+hashtagdata).r
-        val newText = regex.replaceAllIn(temp, replace)
-        temp=newText
-      }
-    temp
-  }
+def addMentionsURL(mentions: List[JsObject],text: String): String ={
+ var temp : String=text
+   for(mention<-mentions){
+     val json=Json.parse(mention.toString())
+     val mentionedScreenName=(json \ "screen_name").result.as[String]
+     val url="https://twitter.com/"+mentionedScreenName
+     val replace="<a href="+url+">@"+mentionedScreenName+"</a>"
+     val regex = ("@"+mentionedScreenName).r
+     val newText = regex.replaceAllIn(temp, replace)
+     temp=newText
+   }
+ temp
+}
 
-  def addMentionsURL(mentions: List[JsObject],text: String): String ={
-    var temp : String=text
-      for(mention<-mentions){
-        val json=Json.parse(mention.toString())
-        val mentionedScreenName=(json \ "screen_name").result.as[String]
-        val url="https://twitter.com/"+mentionedScreenName
-        val replace="<a href="+url+">@"+mentionedScreenName+"</a>"
-        val regex = ("@"+mentionedScreenName).r
-        val newText = regex.replaceAllIn(temp, replace)
-        temp=newText
-      }
-    temp
-  }
-
-
+def addExpandedURLs(urls: List[JsObject],text: String): String ={
+ var temp : String=text
+ for(otherurl<-urls){
+   val json=Json.parse(otherurl.toString())
+   val expandedUrl=(json \ "expanded_url").result.as[String]
+   var displayUrl=(json \ "display_url").result.as[String]
+   var textUrl=(json \ "url").result.as[String]
+   val replace="<a href="+expandedUrl+">"+displayUrl+"</a>"
+   val regex = textUrl.r
+   val newText = regex.replaceAllIn(temp, replace)
+   temp=newText
+ }
+ temp
+}
 }
 
