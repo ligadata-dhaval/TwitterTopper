@@ -27,7 +27,7 @@ object MyWriter {
 }
 
 object Service {
-
+  var max_id: String=""
    val service = new ServiceBuilder()
     .apiKey("jK6k4cbCfO191K2tezqm1eZqQ")
     .apiSecret("YkqNYCjkFUHqQLn7Kh5IxpgFJ8hqIrQcZsWPil4PWh6moYbQhg")
@@ -43,20 +43,21 @@ class Service {
   var response: String = _
   var json: JsValue =_
 
-  def getStatuses(screenNames: String, count: Int): Unit = {
+  def getStatuses(screenNames: String, count: Int,cursor: String): Unit = {
    // println("Screen names are: "+screenNames+" and count is: "+count)
     val (service, accessToken) = Service.getAuthenticationDetails
     //create users list
-    request = new OAuthRequest(Verb.POST, "https://api.twitter.com/1.1/lists/create.json?name=Kanika&mode=public&description=For%20life", service)
+    request = new OAuthRequest(Verb.POST, "https://api.twitter.com/1.1/lists/create.json?name=Guru&mode=public&description=For%20life", service)
     service.signRequest(accessToken, request) // the access token from step 4
     response = request.send().getBody
     json =  Json.parse(response.toString)
     val slug = (json \ "slug" ).as[String]
     val listId= (json \ "id_str" ).as[String]
-    //println("slug is: "+slug)
+    println("slug is: "+slug)
+    println("list id is: "+listId)
 
     //add screen_names to the users list
-    var createMembersQuery = "https://api.twitter.com/1.1/lists/members/create_all.json?screen_name=" + screenNames + "&list_id="+listId
+    var createMembersQuery = "https://api.twitter.com/1.1/lists/members/create_all.json?screen_name=" + screenNames + "&list_id="+listId+"&max_id="+cursor
     request = new OAuthRequest(Verb.POST, createMembersQuery, service)
     service.signRequest(accessToken, request) // the access token from step 4
     response = request.send().getBody
@@ -69,13 +70,18 @@ class Service {
 
     response = request.send().getBody
     json=Json.parse(response)
-    //println()
+    println("Raw Json is: "+json)
 
     var userInfos=(json).as[List[JsObject]]
     var statuses = new Array[String](userInfos.size)
     var i=0
+    var id_str:String=null
     for(userInfo<-userInfos){
       var json=Json.parse(userInfo.toString())
+
+      if(i==(userInfos.size-1)){
+          id_str=(json \ "id_str").result.as[String]
+      }
       var text=(json \ "text").result.as[String]
       var username=(json \ "user" \ "name").result.as[String]
       //hashtags
@@ -88,38 +94,26 @@ class Service {
       var urls=(json \ "entities" \ "urls").as[List[JsObject]]
       var temp3: String=addExpandedURLs(urls,temp2)
 
-      //println("URL: "+temp3)
-      /*val gson = new Gson
-      val jsonString = gson.toJson(new TweetStatus(username,temp3))
-      statuses.add(jsonString)*/
      implicit val userImplicitWrites = Json.writes[TweetStatus]
       val jsUserValue = Json.toJson(new TweetStatus(username,temp3))
       //println(jsUserValue)
      var status= (jsUserValue).toString()
-     //statuses.add(status)
       statuses(i)=status
       i=i+1
-      //println(status)
     }
 
   implicit val userImplicitWrites = Json.writes[ResponseBody]
-    val jsUserValue = Json.toJson(new ResponseBody("1",statuses))
+    val jsUserValue = Json.toJson(new ResponseBody(id_str,statuses))
     println(jsUserValue)
 
-    /*var responseBody=new ResponseBody("1",statuses)
-    val gson = new Gson
-    val jsonString1 = gson.toJson(responseBody)
-    println(jsonString1)
-*/
 
-
- //delete the user list
+ /*//delete the user list
  var deleteListQuery="https://api.twitter.com/1.1/lists/destroy.json?owner_screen_name=PunyacheRau&slug="+slug
  request = new OAuthRequest(Verb.POST, deleteListQuery, service)
  service.signRequest(accessToken, request) // the access token from step 4
  response = request.send().getBody
 // println(response.getBody())
- //println("Process ends!")
+ //println("Process ends!")*/
 }
 
 def addHashTagURL(hashtags: List[JsObject],text: String): String ={
