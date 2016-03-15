@@ -32,11 +32,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="Service.scala" pinned="false" current-in-tab="true">
+      <file leaf-file-name="Service.scala" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/scala/co/vine/ws/Service.scala">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.48076922">
-              <caret line="89" column="10" selection-start-line="89" selection-start-column="10" selection-end-line="89" selection-end-column="10" />
+            <state vertical-scroll-proportion="31.925926">
+              <caret line="87" column="37" selection-start-line="87" selection-start-column="37" selection-end-line="87" selection-end-column="37" />
               <folding>
                 <element signature="e#20#36#0" expanded="true" />
               </folding>
@@ -54,12 +54,14 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Controller.scala" pinned="false" current-in-tab="false">
+      <file leaf-file-name="Controller.scala" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/scala/co/vine/ws/Controller.scala">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="14" column="27" selection-start-line="14" selection-start-column="27" selection-end-line="14" selection-end-column="27" />
-              <folding />
+            <state vertical-scroll-proportion="0.52102375">
+              <caret line="19" column="8" selection-start-line="19" selection-start-column="8" selection-end-line="19" selection-end-column="8" />
+              <folding>
+                <element signature="e#20#68#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -643,8 +645,8 @@
         <option value="$PROJECT_DIR$/src/main/scala/co/vine/ws/Twitter4JService.java" />
         <option value="$PROJECT_DIR$/src/main/scala/co/vine/ws/Twitter4JService.scala" />
         <option value="$PROJECT_DIR$/build.gradle" />
-        <option value="$PROJECT_DIR$/src/main/scala/co/vine/ws/Controller.scala" />
         <option value="$PROJECT_DIR$/src/main/scala/co/vine/ws/Service.scala" />
+        <option value="$PROJECT_DIR$/src/main/scala/co/vine/ws/Controller.scala" />
       </list>
     </option>
   </component>
@@ -1177,12 +1179,12 @@
       <workItem from="1457597302837" duration="17339000" />
       <workItem from="1457721826695" duration="75000" />
       <workItem from="1457837321225" duration="24048000" />
-      <workItem from="1457941266763" duration="32004000" />
+      <workItem from="1457941266763" duration="34509000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="84308000" />
+    <option name="totallyTimeSpent" value="86813000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -1195,7 +1197,7 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1440" height="900" extended-state="0" />
-    <editor active="false" />
+    <editor active="true" />
     <layout>
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32942554" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
@@ -1274,7 +1276,9 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="15" column="0" selection-start-line="15" selection-start-column="0" selection-end-line="15" selection-end-column="0" />
-          <folding />
+          <folding>
+            <element signature="e#20#68#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -1292,7 +1296,9 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="17" column="39" selection-start-line="17" selection-start-column="39" selection-end-line="17" selection-end-column="39" />
-          <folding />
+          <folding>
+            <element signature="e#20#68#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -1310,7 +1316,9 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="17" column="39" selection-start-line="17" selection-start-column="39" selection-end-line="17" selection-end-column="39" />
-          <folding />
+          <folding>
+            <element signature="e#20#68#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -1472,14 +1480,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/scala/co/vine/ws/Controller.scala">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="14" column="27" selection-start-line="14" selection-start-column="27" selection-end-line="14" selection-end-column="27" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.github.scribejava/scribejava-core/2.3.0/a560437cef466895c0c5e344fffcba30a997e610/scribejava-core-2.3.0-sources.jar!/com/github/scribejava/core/model/OAuthRequest.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
@@ -1490,10 +1490,20 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/scala/co/vine/ws/Service.scala">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.48076922">
-          <caret line="89" column="10" selection-start-line="89" selection-start-column="10" selection-end-line="89" selection-end-column="10" />
+        <state vertical-scroll-proportion="31.925926">
+          <caret line="87" column="37" selection-start-line="87" selection-start-column="37" selection-end-line="87" selection-end-column="37" />
           <folding>
             <element signature="e#20#36#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/scala/co/vine/ws/Controller.scala">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.52102375">
+          <caret line="19" column="8" selection-start-line="19" selection-start-column="8" selection-end-line="19" selection-end-column="8" />
+          <folding>
+            <element signature="e#20#68#0" expanded="true" />
           </folding>
         </state>
       </provider>
