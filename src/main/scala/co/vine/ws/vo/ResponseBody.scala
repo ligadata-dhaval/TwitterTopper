@@ -1,4 +1,4 @@
-package co.vine.ws.co.vine.ws.vo
+package co.vine.ws.vo
 
 import scala.beans.BeanProperty
 

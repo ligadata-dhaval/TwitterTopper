@@ -32,12 +32,10 @@ dependencies {
     compile("org.springframework.boot:spring-boot-starter-actuator")
 	testCompile('org.springframework.boot:spring-boot-starter-test')
 	compile 'org.scala-lang:scala-library:2.11.7'
-    compile 'org.scalaj:scalaj-http_2.11:2.2.1'
     compile 'com.github.scribejava:scribejava-apis:2.3.0'
     compile 'com.typesafe.play:play_2.11:2.5.0'
-	compile 'org.twitter4j:twitter4j-core:4.0.4'
-    compile 'com.google.code.gson:gson:2.6.2'
-
+    compile group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.1'
+    compile group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.1'
 }
 
 

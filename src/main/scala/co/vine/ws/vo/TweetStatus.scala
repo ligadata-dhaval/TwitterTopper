@@ -1,4 +1,4 @@
-package co.vine.ws.co.vine.ws.vo
+package co.vine.ws.vo
 
 /**
  * Created by dhavalkolapkar on 3/15/16.

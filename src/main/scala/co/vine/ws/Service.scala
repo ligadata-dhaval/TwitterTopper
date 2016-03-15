@@ -1,20 +1,14 @@
 package co.vine.ws
 
-import _root_.co.vine.ws.exceptions.SystemError
-import co.vine.ws
+import co.vine.ws.exceptions.SystemError
+import co.vine.ws.vo.{ResponseBody, TweetStatus}
 import com.github.scribejava.core.oauth._
-import _root_.co.vine.ws.co.vine.ws.vo.{ResponseBody, TweetStatus, Response}
 import scala.util.control.Exception.catching
 import com.github.scribejava.apis.TwitterApi
 import com.github.scribejava.core.builder.ServiceBuilder
 import com.github.scribejava.core.exceptions.OAuthException
 import com.github.scribejava.core.model._
-import com.google.gson.Gson
 import play.api.libs.json._
-
-import scala.beans.BeanProperty
-import scala.collection.mutable.ListBuffer
-
 /**
  * Created by dhavalkolapkar on 3/9/16.
  */
@@ -37,6 +31,7 @@ object Service {
 }
 
 class Service {
+  var logger: org.apache.logging.log4j.Logger = org.apache.logging.log4j.LogManager.getLogger(this.getClass)
   var max_id: String = ""
   var request: OAuthRequest = _
   var responseBody: String = _
@@ -44,9 +39,8 @@ class Service {
   var json: JsValue = _
   var jsUserValue: JsValue = _
 
-  def getStatuses(screenNames: String, count: Int, cursorTemp: String): JsValue = {
+  def getStatuses(screenNames: String, count: Int, cursor: String): JsValue = {
     val JsonCatch = catching(classOf[JsResultException], classOf[NullPointerException]).withApply(e => throw new SystemError(e.getMessage))
-      var cursor = cursorTemp
     JsonCatch.opt{
       val (service, accessToken) = Service.getAuthenticationDetails
       request = new OAuthRequest(Verb.POST, "https://api.twitter.com/1.1/lists/create.json?name=" + System.currentTimeMillis().toString + "&mode=public&description=For%20life", service)
@@ -56,67 +50,67 @@ class Service {
       json = Json.parse(responseBody.toString)
       val slug = (json \ "slug").as[String]
       val listId = (json \ "id_str").as[String]
+      logger.debug("Creation of user list,"+listId+", with slug "+slug)
       if (response.isSuccessful) {
         val createMembersQuery = "https://api.twitter.com/1.1/lists/members/create_all.json?screen_name=" + screenNames + "&list_id=" + listId
         request = new OAuthRequest(Verb.POST, createMembersQuery, service)
-        service.signRequest(accessToken, request) // the access token from step 4
+        service.signRequest(accessToken, request)
         response = request.send()
         responseBody = response.getBody
         json = Json.parse(responseBody.toString)
-
+        logger.info("Add users to the list "+json)
         if (response.isSuccessful) {
           var getStatusesQuery: String = ""
-          if (cursor == null)
+          if (cursor == null){
+            logger.info("User did not provide a cursor.")
             getStatusesQuery = "https://api.twitter.com/1.1/lists/statuses.json?slug=" + slug.toString + "&owner_screen_name=PunyacheRau&count=" + count + "&include_entities=true"
-          else
+          }
+          else{
+            logger.info("User provided a cursor "+cursor)
             getStatusesQuery = "https://api.twitter.com/1.1/lists/statuses.json?slug=" + slug.toString + "&owner_screen_name=PunyacheRau&count=" + count + "&include_entities=true" + "&max_id=" + cursor
+          }
           request = new OAuthRequest(Verb.GET, getStatusesQuery, service)
-          service.signRequest(accessToken, request) // the access token from step 4
+          service.signRequest(accessToken, request)
           response = request.send()
           responseBody = response.getBody
           json = Json.parse(responseBody)
-          var userInfos = (json).as[List[JsObject]]
-          var statuses = new Array[String](userInfos.size - 1)
-          var i = 0
+          val userListStatuses = (json).as[List[JsObject]]
+          val userListShortStatuses = new Array[String](userListStatuses.size - 1)
+          var countOfUserListStatuses = 0
           var id_str: String = null
-          for (userInfo <- userInfos) {
-            var json = Json.parse(userInfo.toString())
-            var text = (json \ "text").result.as[String]
-            var username = (json \ "user" \ "name").result.as[String]
-            //hashtags
-            var hashtags = (json \ "entities" \ "hashtags").as[List[JsObject]]
-            var temp = addHashTagURL(hashtags, text)
-            //mentions
-            var mentions = (json \ "entities" \ "user_mentions").as[List[JsObject]]
-            var temp2 = addMentionsURL(mentions, temp)
-            //urls
-            var urls = (json \ "entities" \ "urls").as[List[JsObject]]
-            var temp3: String = addExpandedURLs(urls, temp2)
+          for (userInfo <- userListStatuses) {
+            val json = Json.parse(userInfo.toString())
+            val userName = (json \ "user" \ "name").result.as[String]
+           //Update the hashtags, mentions and urls
+            val text = addExpandedURLs((json \ "entities" \ "urls").as[List[JsObject]], addMentionsURL((json \ "entities" \ "user_mentions").as[List[JsObject]], addHashTagURL((json \ "entities" \ "hashtags").as[List[JsObject]], (json \ "text").result.as[String])))
 
             implicit val userImplicitWrites = Json.writes[TweetStatus]
-            val jsUserValue = Json.toJson(new TweetStatus(username, temp3))
-            var status = (jsUserValue).toString()
-            if (i == (userInfos.size - 1)) {
+            val status = (Json.toJson(new TweetStatus(userName, text))).toString()
+            if (countOfUserListStatuses == (userListStatuses.size - 1)) {
               id_str = (json \ "id_str").result.as[String]
             } else {
-              statuses(i) = status
-              i = i + 1
+              userListShortStatuses(countOfUserListStatuses) = status
+              countOfUserListStatuses = countOfUserListStatuses + 1
             }
           }
 
           implicit val userImplicitWrites = Json.writes[ResponseBody]
-          jsUserValue = Json.toJson(new ResponseBody(id_str, statuses))
+          jsUserValue = Json.toJson(new ResponseBody(id_str, userListShortStatuses))
 
           if (response.isSuccessful) {
             //delete the user list
-            var deleteListQuery = "https://api.twitter.com/1.1/lists/destroy.json?owner_screen_name=PunyacheRau&slug=" + slug
+            val deleteListQuery = "https://api.twitter.com/1.1/lists/destroy.json?owner_screen_name=PunyacheRau&slug=" + slug
             request = new OAuthRequest(Verb.POST, deleteListQuery, service)
             service.signRequest(accessToken, request) // the access token from step 4
+              response= request.send()
+            logger.info("User list "+slug+" is deleted? "+response.isSuccessful)
           }
         } else {
-          throw new SystemError("Member Creation Failed!")        }
+          logger.error("Member creation failed!")
+          throw new SystemError("Member Creation Failed!")
+        }
       } else {
-        //println("List creation failed")
+        logger.error("List creation failed")
         throw new SystemError("List Creation Failed!")
       }
     }
@@ -124,47 +118,42 @@ class Service {
     }
 
   def addHashTagURL(hashtags: List[JsObject], text: String): String = {
-    var temp: String = text
-    var temp1: String = ""
+    var modifiedText: String = text
     for (hashtag <- hashtags) {
       val json = Json.parse(hashtag.toString())
-      val hashtagdata = (json \ "text").result.as[String]
-      val url = "https://twitter.com/hashtag/" + hashtagdata
-      val replace = "<a href= " + url + ">#" + hashtagdata + "</a>"
-      val regex = ("#" + hashtagdata).r
-      val newText = regex.replaceAllIn(temp, replace)
-      temp = newText
+      val hashtagData = (json \ "text").result.as[String]
+      val url = "https://twitter.com/hashtag/" + hashtagData
+      val replace = "<a href= " + url + ">#" + hashtagData + "</a>"
+      val regex = ("#" + hashtagData).r
+      val tempText = regex.replaceAllIn(modifiedText, replace)
+      modifiedText = tempText
     }
-    temp
+    modifiedText
   }
 
   def addMentionsURL(mentions: List[JsObject], text: String): String = {
-    var temp: String = text
+    var modifiedText: String = text
     for (mention <- mentions) {
       val json = Json.parse(mention.toString())
       val mentionedScreenName = (json \ "screen_name").result.as[String]
       val url = "https://twitter.com/" + mentionedScreenName
       val replace = "<a href=" + url + ">@" + mentionedScreenName + "</a>"
       val regex = ("@" + mentionedScreenName).r
-      val newText = regex.replaceAllIn(temp, replace)
-      temp = newText
+      val tempText = regex.replaceAllIn(modifiedText, replace)
+      modifiedText = tempText
     }
-    temp
+    modifiedText
   }
 
   def addExpandedURLs(urls: List[JsObject], text: String): String = {
-    var temp: String = text
-    for (otherurl <- urls) {
-      val json = Json.parse(otherurl.toString())
-      val expandedUrl = (json \ "expanded_url").result.as[String]
-      var displayUrl = (json \ "display_url").result.as[String]
-      var textUrl = (json \ "url").result.as[String]
-      val replace = "<a href=" + expandedUrl + ">" + displayUrl + "</a>"
-      val regex = textUrl.r
-      val newText = regex.replaceAllIn(temp, replace)
-      temp = newText
+    var modifiedText: String = text
+    for (url <- urls) {
+      val json = Json.parse(url.toString())
+      val replace = "<a href=" + (json \ "expanded_url").result.as[String] + ">" + (json \ "display_url").result.as[String] + "</a>"
+      val regex = ((json \ "url").result.as[String]).r
+      val tempText = regex.replaceAllIn(modifiedText, replace)
+      modifiedText = tempText
     }
-    temp
+    modifiedText
   }
-
 }

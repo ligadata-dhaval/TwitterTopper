@@ -12,7 +12,6 @@ class Controller {
   @RequestBody
   @RequestMapping(value = Array("/statuses"))
   def viewStatus(@RequestParam("screen_names") screenNames: String, @RequestParam("count") count: Int, @RequestParam(required = false) cursor: String): String = {
-    println("Cursor is: " + cursor)
     new Service().getStatuses(screenNames, count + 1, cursor).toString()
   }
 }
