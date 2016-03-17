@@ -89,7 +89,6 @@
     <orderEntry type="library" name="Gradle: com.typesafe.play:play-datacommons_2.11:2.5.0" level="project" />
     <orderEntry type="library" name="Gradle: org.reactivestreams:reactive-streams:1.0.0" level="project" />
     <orderEntry type="library" name="Gradle: com.typesafe.akka:akka-stream_2.11:2.4.2" level="project" />
-    <orderEntry type="library" name="Gradle: org.scala-lang.modules:scala-xml_2.11:1.0.1" level="project" />
     <orderEntry type="library" name="Gradle: xml-apis:xml-apis:1.4.01" level="project" />
     <orderEntry type="library" name="Gradle: javax.inject:javax.inject:1" level="project" />
     <orderEntry type="library" name="Gradle: com.google.guava:guava:16.0.1" level="project" />
@@ -98,5 +97,8 @@
     <orderEntry type="library" name="Gradle: com.fasterxml.jackson.core:jackson-core:2.6.5" level="project" />
     <orderEntry type="library" name="Gradle: org.apache.logging.log4j:log4j-api:2.1" level="project" />
     <orderEntry type="library" name="Gradle: org.apache.logging.log4j:log4j-core:2.1" level="project" />
+    <orderEntry type="library" name="Gradle: org.scalatest:scalatest_2.11:3.0.0-M15" level="project" />
+    <orderEntry type="library" name="Gradle: org.scalactic:scalactic_2.11:3.0.0-M15" level="project" />
+    <orderEntry type="library" name="Gradle: org.scala-lang.modules:scala-xml_2.11:1.0.2" level="project" />
   </component>
 </module>
