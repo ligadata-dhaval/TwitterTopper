@@ -1,12 +1,16 @@
 package co.vine.ws.utility
 
-import play.api.libs.json.{Json, JsObject}
+import play.api.libs.json.{JsObject, Json}
 
 /**
- * Created by dhavalkolapkar on 3/15/16.
+ * Utility for transforming the hashtags, mentions and urls to expanded url
  */
 object TwitterUtility {
-
+  /*
+    hashtags should link to the hashtag page, e.g. https://twitter.com/hashtag/ Tag
+    @param hashtags list of hashtags to be appended with the url
+    @param text Unformatted status
+   */
   def addHashTagURL(hashtags: List[JsObject], text: String): String = {
     var modifiedText: String = text
     for (hashtag <- hashtags) {
@@ -21,6 +25,11 @@ object TwitterUtility {
     modifiedText
   }
 
+  /*
+    mentions should link to the user profile at http://twitter.com/User
+    @param mentions list of mentions to be appended with the url
+    @param text Unformatted status
+   */
   def addMentionsURL(mentions: List[JsObject], text: String): String = {
     var modifiedText: String = text
     for (mention <- mentions) {
@@ -35,6 +44,12 @@ object TwitterUtility {
     modifiedText
   }
 
+  /*
+  All the other entities that have URLs should link to their resolved expanded URL, with the
+  display URL as the anchor text.
+  @param urls list of urls to be appended with the expanded url
+  @param text Unformatted status
+   */
   def addExpandedURLs(urls: List[JsObject], text: String): String = {
     var modifiedText: String = text
     for (url <- urls) {

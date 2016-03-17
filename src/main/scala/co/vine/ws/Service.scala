@@ -1,24 +1,18 @@
 package co.vine.ws
 
-import co.vine.ws.exceptions.SystemError
-import co.vine.ws.utility.{TwitterDsl, TwitterUtility}
-import co.vine.ws.vo.{ResponseBody, TweetStatus}
-import com.github.scribejava.core.oauth._
-import scala.concurrent.{ExecutionContext, Future, Await}
-import scala.util.control.Exception.catching
-import com.github.scribejava.apis.TwitterApi
-import com.github.scribejava.core.builder.ServiceBuilder
-import com.github.scribejava.core.exceptions.OAuthException
-import com.github.scribejava.core.model._
-import play.api.libs.json._
-import scala.concurrent.ExecutionContext.Implicits.global
-/**
- * Created by dhavalkolapkar on 3/9/16.
+import co.vine.ws.utility.TwitterDsl
+
+/*
+ * Retrieve the most recent statuses among the requested users.
+* @param screen_names  A comma separated list of screen names of users whose statuses we're fetching
+* @param count  Number of results this request should return.
+* @param cursor optional. When the response object has a non-null 'next_cursor' member, the value may be passed as the 'cursor' parameter in the next request to fetch the next page of results.
  */
-
-
-class Service {
-
+class Service{
+/*
+    Retrieve the most recent statuses among the requested users.
+    @param
+ */
   def getStatuses(screenNames: String, count: Int, cursor: String): String = {
     (TwitterDsl.getUserListStatuses(TwitterDsl.addMembersToList(screenNames, TwitterDsl.createUsersList()), cursor, count))
   }

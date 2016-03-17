@@ -2,13 +2,13 @@ package co.vine.ws.utility
 
 import co.vine.ws.exceptions.SystemError
 import co.vine.ws.vo.{ResponseBody, TweetStatus}
-import com.github.scribejava.core.model.{Response, Verb, OAuthRequest}
-import play.api.libs.json.{JsObject, JsValue, Json, JsResultException}
+import com.github.scribejava.core.model.{OAuthRequest, Verb}
+import play.api.libs.json.{JsObject, JsResultException, Json}
 
 import scala.util.control.Exception._
 
 /**
- * Created by dhavalkolapkar on 3/16/16.
+ * Domain specific language for twitter user list creation, addition of members and deletion
  *
  */
 object TwitterDsl extends Logger {
@@ -17,6 +17,9 @@ object TwitterDsl extends Logger {
   val service = OauthService.service
   var request: OAuthRequest = _
 
+  /*
+    Creates a new list for the authenticated user. Note that you can create up to 1000 lists per account.
+   */
   def createUsersList(): String = {
     var listId: String = ""
     val JsonCatch = catching(classOf[JsResultException], classOf[NullPointerException]).withApply(e => throw new SystemError(e.getMessage))
@@ -37,6 +40,11 @@ object TwitterDsl extends Logger {
     (listId)
   }
 
+  /*
+   Adds multiple members to a list, by specifying a comma-separated list of member ids or screen names. The authenticated user must own the list to be able to add members to it. Note that lists can’t have more than 5,000 members, and you are limited to adding up to 100 members to a list at a time with this method. Please note that there can be issues with lists that rapidly remove and add memberships. Take care when using these methods such that you are not too rapidly switching between removals and adds on the same list.
+   @param screenNames List of users to be added
+   @param listId Id of the list to which the users are to be added
+  */
   def addMembersToList(screenNames: String, listId: String): String = {
     val JsonCatch = catching(classOf[JsResultException], classOf[NullPointerException]).withApply(e => throw new SystemError(e.getMessage))
     JsonCatch.opt {
@@ -55,6 +63,12 @@ object TwitterDsl extends Logger {
     listId
   }
 
+  /*
+  display and page through a time-ordered list of statuses of several Twitter users
+  @param listId Id of the list which has the users whose statuses are to be retrieved
+  @param cursor When the response object has a non-null 'next_cursor' member, the value may be passed as the 'cursor' parameter in the next request to fetch the next page of results.
+  @param count No of statuses to be retrieved
+   */
   def getUserListStatuses(listId: String, cursor: String, count: Int): String = {
     var userStatuses: String = ""
     val JsonCatch = catching(classOf[JsResultException], classOf[NullPointerException]).withApply(e => throw new SystemError(e.getMessage))
@@ -108,15 +122,19 @@ object TwitterDsl extends Logger {
     userStatuses
   }
 
-   def deleteUsersList(listId: String) {
+  /*
+    delete the users list
+    @param listId The Id of the list to be deleted
+     */
+  def deleteUsersList(listId: String) {
     val deleteListQuery = "https://api.twitter.com/1.1/lists/destroy.json?list_id=" + listId
     request = new OAuthRequest(Verb.POST, deleteListQuery, service)
     service.signRequest(accessToken, request) // the access token from step 4
     val response = request.send()
     logger.info("User list is deleted? " + response.isSuccessful)
-    if(!response.isSuccessful){
-      logger.error("Error deleting the users list "+listId)
-    throw new SystemError("Error deleting the users list")
+    if (!response.isSuccessful) {
+      logger.error("Error deleting the users list " + listId)
+      throw new SystemError("Error deleting the users list")
     }
-   }
+  }
 }

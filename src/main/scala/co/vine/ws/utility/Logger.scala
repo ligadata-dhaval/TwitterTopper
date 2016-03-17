@@ -1,7 +1,8 @@
 package co.vine.ws.utility
 
 /**
- * Created by dhavalkolapkar on 3/16/16.
+ * Logger service.
+ * Log4j2 for logging.
  */
 trait Logger {
   def logger = Logger.logger

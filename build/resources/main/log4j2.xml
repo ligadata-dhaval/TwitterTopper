@@ -4,23 +4,24 @@
         <Property name="log-path">./logs</Property>
     </Properties>
     <Appenders>
-        <RollingFile name="HourlyRoll" fileName="${log-path}/VineWS.log" filePattern="${log-path}/VineWSLog-%d{yyyy-MM-dd-HH}-%i.log.gz">
+        <RollingFile name="HourlyRoll" fileName="${log-path}/VineWS.log"
+                     filePattern="${log-path}/VineWSLog-%d{yyyy-MM-dd-HH}-%i.log.gz">
 
-            <PatternLayout pattern="%d - %c [%t] - %p - %m %n" />
+            <PatternLayout pattern="%d - %c [%t] - %p - %m %n"/>
             <Policies>
-                <SizeBasedTriggeringPolicy size="200 MB" />
-                <TimeBasedTriggeringPolicy />
-                <OnStartupTriggeringPolicy />
+                <SizeBasedTriggeringPolicy size="200 MB"/>
+                <TimeBasedTriggeringPolicy/>
+                <OnStartupTriggeringPolicy/>
             </Policies>
         </RollingFile>
         <Console name="CONSOLE" target="SYSTEM_OUT">
-            <PatternLayout pattern="%5p [%t] - %m%n" />
+            <PatternLayout pattern="%5p [%t] - %m%n"/>
         </Console>
     </Appenders>
     <Loggers>
         <Root level="DEBUG">
-            <AppenderRef ref="CONSOLE" />
-            <AppenderRef ref="HourlyRoll" />
+            <AppenderRef ref="CONSOLE"/>
+            <AppenderRef ref="HourlyRoll"/>
         </Root>
     </Loggers>
 </Configuration>
