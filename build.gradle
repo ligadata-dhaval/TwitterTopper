@@ -9,6 +9,7 @@ buildscript {
         classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
     }
 }
+
 apply plugin: 'scala'
 apply plugin: 'java'
 apply plugin: 'idea'
@@ -16,8 +17,9 @@ apply plugin: 'eclipse'
 apply plugin: 'spring-boot'
 apply plugin: 'application'
 
+
 jar {
-    baseName = 'vine-ws'
+    baseName = 'tweet-topper'
     version = '0.0.1-SNAPSHOT'
 }
 sourceCompatibility = 1.8
@@ -44,4 +46,4 @@ task wrapper(type: Wrapper) {
     gradleVersion = '2.11'
 }
 
-mainClassName = 'co.vine.ws.TwitterApplication'
+mainClassName = 'com.tweettopper.TwitterApplication'

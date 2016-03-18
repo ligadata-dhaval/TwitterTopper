@@ -4,8 +4,8 @@
         <Property name="log-path">./logs</Property>
     </Properties>
     <Appenders>
-        <RollingFile name="HourlyRoll" fileName="${log-path}/VineWS.log"
-                     filePattern="${log-path}/VineWSLog-%d{yyyy-MM-dd-HH}-%i.log.gz">
+        <RollingFile name="HourlyRoll" fileName="${log-path}/tweet-topper-latest.log"
+                     filePattern="${log-path}/tweet-topper-%d{yyyy-MM-dd-HH}-%i.log.gz">
 
             <PatternLayout pattern="%d - %c [%t] - %p - %m %n"/>
             <Policies>
